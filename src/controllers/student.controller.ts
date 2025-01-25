@@ -4,6 +4,8 @@ import { StudentService } from '../services/student.service';
 import { StudentDto } from '../dtos/student.dto';
 import { StudentCourseService } from '../services/student_course.service';
 
+import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse } from "@nestjs/swagger";
+
 @Controller('/student')
 export class StudentController {
   constructor(
@@ -12,6 +14,20 @@ export class StudentController {
   ) {}
 
   @Post()
+  @ApiBody({
+    type: StudentDto,
+    description: 'Student data',
+    examples: {
+      a: {
+        value: {
+          name: 'John Doe',
+          email: 'sa@gmail.com'
+        }
+      }
+    }
+  })
+  @ApiCreatedResponse({ description: 'Student created' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async create(@Body() studentDto: StudentDto) {
     try {
       return await this.studentService.create(studentDto);
@@ -21,6 +37,8 @@ export class StudentController {
   }
 
   @Delete('/:id')
+  @ApiOkResponse({ description: 'Student deleted' })
+  @ApiNotFoundResponse({ description: 'Student not found' })
   async delete(@Param('id') id: number) {
     try {
       await this.studentService.delete(id);
@@ -31,6 +49,7 @@ export class StudentController {
   }
 
   @Get()
+  @ApiOkResponse()
   async findAll() {
     try {
       return await this.studentService.findAll();
@@ -40,6 +59,8 @@ export class StudentController {
   }
 
   @Get('/:id')
+  @ApiOkResponse()
+  @ApiNotFoundResponse({ description: 'Student not found' })
   async findOne(@Param('id') id: number) {
     try {
       return await this.studentService.findOne(id);
@@ -49,6 +70,7 @@ export class StudentController {
   }
 
   @Get('/:id/courses')
+  @ApiOkResponse()
   async getCourses(@Param('id') id: number) {
     try {
       return await this.studentCourseService.getByStudentId(id);
@@ -58,6 +80,21 @@ export class StudentController {
   }
 
   @Put('/:id')
+  @ApiBadRequestResponse({ description: 'Invalid type' })
+  @ApiNotFoundResponse({ description: 'Student not found' })
+  @ApiOkResponse({ description: 'Student updated' })
+  @ApiBody({
+    type: StudentDto,
+    description: 'Student data',
+    examples: {
+      a: {
+        value: {
+          name: 'John Doe',
+          email: 'sa@gmail.com'
+        }
+      }
+    }
+  })
   async update(@Param('id') id: number, @Body() studentDto: StudentDto) {
     try {
       await this.studentService.update(id, studentDto);
