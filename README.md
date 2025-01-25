@@ -1,5 +1,5 @@
 # API Documentation
-/api endpoint to access Swagger
+[/api](https://student-rizv.onrender.com/api) endpoint to access Swagger
 
 ## Course
 
