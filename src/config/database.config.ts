@@ -1,5 +1,21 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+
+let sslOptions;
+if (process.env.SSL === 'true') {
+  sslOptions = {
+    ssl: true,
+    extra: {
+      ssl: {
+          rejectUnauthorized: false,
+      },
+    }
+  } 
+} else {
+  sslOptions = {
+    ssl: false,
+  }
+}
+
 
 export const prodDB = TypeOrmModule.forRoot({
     type: 'postgres',
@@ -10,12 +26,7 @@ export const prodDB = TypeOrmModule.forRoot({
     database: process.env.PGDATABASE,
     synchronize: true,
     autoLoadEntities: true,
-    ssl: true,
-    extra: {
-      ssl: {
-          rejectUnauthorized: false,
-      },
-    },
+    ... sslOptions
 })
 
 export const testDB = TypeOrmModule.forRoot({
