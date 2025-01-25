@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Put, Delete, Param, HttpException } from '@nestjs/common';
 
-import { StudentService } from 'src/services/student.service';
-import { StudentDto } from 'src/dtos/student.dto';
-import { StudentCourseService } from 'src/services/student_course.service';
+import { StudentService } from '../services/student.service';
+import { StudentDto } from '../dtos/student.dto';
+import { StudentCourseService } from '../services/student_course.service';
 
 @Controller('/student')
 export class StudentController {
@@ -14,8 +14,7 @@ export class StudentController {
   @Post()
   async create(@Body() studentDto: StudentDto) {
     try {
-      await this.studentService.create(studentDto);
-      return { message: 'Student created' };
+      return await this.studentService.create(studentDto);
     } catch (err) {
       throw new HttpException(err.message, err.status); 
     }

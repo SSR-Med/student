@@ -4,9 +4,9 @@ import { Controller,
     HttpException
  } from "@nestjs/common";
 
-import { CourseService } from "src/services/course.service";
-import { CourseDto } from "src/dtos/course.dto";
-import { StudentCourseService } from "src/services/student_course.service";
+import { CourseService } from "../services/course.service";
+import { CourseDto } from "../dtos/course.dto";
+import { StudentCourseService } from "../services/student_course.service";
 
 @Controller("/course")
 export class CourseController{
@@ -17,8 +17,7 @@ export class CourseController{
     @Post()
     async create(@Body() courseDto: CourseDto){
         try{
-            await this.courseService.create(courseDto);
-            return {"message": "Course created"};
+            return await this.courseService.create(courseDto);
         }catch(err){
             throw new HttpException(err.message, err.status);
         }
@@ -78,8 +77,7 @@ export class CourseController{
     @Put("/:id")
     async update(@Param('id') id: number, @Body() courseDto: CourseDto){
         try{
-            await this.courseService.update(id, courseDto);
-            return {"message": "Course updated"};
+            return await this.courseService.update(id, courseDto);
         }catch(err){
             throw new HttpException(err.message, err.status);
         }

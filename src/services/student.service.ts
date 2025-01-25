@@ -2,8 +2,8 @@ import { Injectable, HttpException } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from "typeorm";
 
-import { Student } from "src/entities/student.entity";
-import { StudentDto } from "src/dtos/student.dto";
+import { Student } from "../entities/student.entity";
+import { StudentDto } from "../dtos/student.dto";
 
 @Injectable()
 export class StudentService{
@@ -12,10 +12,10 @@ export class StudentService{
         private studentRepository: Repository<Student>
     ){}
 
-    async create(studentDto: StudentDto): Promise<Student>{
+    async create(studentDto: StudentDto): Promise<{message: string}>{
         try{
-            const student = await this.studentRepository.save(studentDto);
-            return student;
+            await this.studentRepository.save(studentDto);
+            return {"message": "Student created"}
         }catch(err){
             throw new HttpException(err.message, 500);
         }

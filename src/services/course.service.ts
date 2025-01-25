@@ -2,8 +2,8 @@ import { Injectable, HttpException } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from "typeorm";
 
-import { Course } from "src/entities/course.entity";
-import { CourseDto } from "src/dtos/course.dto";
+import { Course } from "../entities/course.entity";
+import { CourseDto } from "../dtos/course.dto";
 
 @Injectable()
 export class CourseService{
@@ -12,10 +12,10 @@ export class CourseService{
         private courseRepository: Repository<Course>
     ){}
 
-    async create(courseDto: CourseDto): Promise<Course>{
+    async create(courseDto: CourseDto): Promise<{message: string}>{
         try{
-            const course = await this.courseRepository.save(courseDto);
-            return course;
+            await this.courseRepository.save(courseDto);
+            return {message: 'Course created'}
         }catch(err){
             throw new HttpException(err.message, 500);
         }
@@ -42,13 +42,13 @@ export class CourseService{
         return await this.courseRepository.findOneBy({id});
     }
 
-    async update(id: number, courseDto: CourseDto): Promise<string>{
+    async update(id: number, courseDto: CourseDto): Promise<{message: string}>{
         const course = await this.courseRepository.findOneBy({id});
         if(!course){
             throw new HttpException('Course not found', 404);
         }
         await this.courseRepository.update(id, courseDto);
-        return "Course updated";
+        return {"message": "Course updated"};
     }
     
 }
