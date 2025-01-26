@@ -8,13 +8,7 @@ export const prodDB = TypeOrmModule.forRoot({
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
     synchronize: true,
-    autoLoadEntities: true,
-    ssl: true,
-    extra: {
-      ssl: {
-          rejectUnauthorized: false,
-      },
-    },
+    autoLoadEntities: true
 })
 
 export const testDB = TypeOrmModule.forRoot({
