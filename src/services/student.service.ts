@@ -5,6 +5,8 @@ import { Repository } from "typeorm";
 import { Student } from "../entities/student.entity";
 import { StudentDto } from "../dtos/student.dto";
 
+import { deleteBlankSpaces, capitalizeFirstLetter } from "src/helpers/FormatString";
+
 @Injectable()
 export class StudentService{
     constructor(
@@ -14,6 +16,8 @@ export class StudentService{
 
     async create(studentDto: StudentDto): Promise<{message: string}>{
         try{
+            studentDto.name = deleteBlankSpaces(studentDto.name);
+            studentDto.name = capitalizeFirstLetter(studentDto.name);
             await this.studentRepository.save(studentDto);
             return {"message": "Student created"}
         }catch(err){
@@ -42,6 +46,8 @@ export class StudentService{
     }
 
     async update(id: number, studentDto: StudentDto): Promise<string>{
+        studentDto.name = deleteBlankSpaces(studentDto.name);
+        studentDto.name = capitalizeFirstLetter(studentDto.name);
         const student = await this.studentRepository.findOneBy({id});
         if(!student){
             throw new HttpException('Student not found', 404);
